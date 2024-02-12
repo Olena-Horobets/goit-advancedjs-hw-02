@@ -4,10 +4,9 @@ function createPromise(position, delay) {
   const shouldResolve = Math.random() > 0.3;
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (shouldResolve) {
-        return resolve({ position, delay });
-      }
-      return reject({ position, delay });
+      shouldResolve
+        ? resolve({ position, delay })
+        : reject({ position, delay });
     }, delay);
   });
 }
@@ -24,7 +23,7 @@ function logPromises({ delay, step, count }) {
   }
 }
 
-form.addEventListener('submit', e => {
+function onSubmit(e) {
   e.preventDefault();
   const data = {
     delay: Number(e.target.elements.delay.value),
@@ -33,4 +32,7 @@ form.addEventListener('submit', e => {
   };
 
   logPromises(data);
-});
+  form.reset();
+}
+
+form.addEventListener('submit', onSubmit);

@@ -22,6 +22,7 @@ const options = {
       return window.alert('Please choose a date in the future');
     }
 
+    refs.startBtn.removeAttribute('disabled');
     time = selectedDates[0];
   },
 };
@@ -58,6 +59,22 @@ function updateTimer({ days, hours, minutes, seconds }) {
   refs.seconds.textContent = addLeadingZero(seconds);
 }
 
-refs.startBtn.addEventListener('click', e =>
-  setInterval(() => updateTimer(convertMs(time - new Date())), 1000)
-);
+function onStartBtnClick(e) {
+  refs.startBtn.setAttribute('disabled', 'true');
+  refs.input.setAttribute('disabled', 'true');
+
+  const interval = setInterval(() => {
+    let difference = time - new Date();
+
+    if (difference >= 0) {
+      updateTimer(convertMs(difference));
+    } else {
+      clearInterval(interval);
+      refs.startBtn.removeAttribute('disabled');
+      refs.input.removeAttribute('disabled');
+    }
+  }, 1000);
+}
+
+refs.startBtn.setAttribute('disabled', 'true');
+refs.startBtn.addEventListener('click', onStartBtnClick);
